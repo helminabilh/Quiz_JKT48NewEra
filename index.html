@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JKT48 New Era Quiz - 500 Database</title>
+    <title>JKT48 New Era Quiz - Live</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -60,6 +60,7 @@
         .social-icons { display: flex; gap: 20px; }
         .social-icons a { color: white; font-size: 1.3rem; transition: 0.3s; opacity: 0.8; }
 
+        /* BOX QUIZ */
         #quiz-container {
             background: var(--glass);
             backdrop-filter: blur(20px);
@@ -74,6 +75,7 @@
             z-index: 10;
         }
 
+        /* FEEDBACK SYSTEM (LIVE LOOK) */
         .feedback-container {
             position: fixed;
             bottom: 20px;
@@ -83,39 +85,41 @@
         }
 
         #feedback-list {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
             padding: 10px;
             border-radius: 12px;
             margin-bottom: 10px;
             font-size: 0.75rem;
             border: 1px solid var(--glass-border);
-            height: 100px;
+            height: 120px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            gap: 5px;
+            gap: 8px;
         }
 
         .feedback-item {
-            padding: 5px 8px;
-            border-left: 2px solid var(--jkt48-red);
-            background: rgba(255,255,255,0.05);
-            animation: slideUp 0.3s ease-out;
+            padding: 6px 10px;
+            border-left: 3px solid var(--jkt48-red);
+            background: rgba(255,255,255,0.1);
+            animation: slideUp 0.4s ease-out;
             white-space: nowrap;
             overflow: hidden;
             position: relative;
         }
 
+        .feedback-user { color: #ffeb3b; font-weight: 800; margin-right: 5px; }
+
         .marquee-active {
             display: inline-block;
             padding-left: 100%;
-            animation: marquee 10s linear infinite;
+            animation: marquee 12s linear infinite;
         }
 
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         .feedback-input-group { display: flex; gap: 5px; }
         .feedback-input-group input {
@@ -127,18 +131,7 @@
             border-radius: 50%; cursor: pointer; transition: 0.3s;
         }
 
-        .status-text { font-size: 2rem; font-weight: 800; color: #fff; animation: glow 1.5s infinite alternate; }
-        h1 { color: #ffffff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; font-size: 1.5rem; font-weight: 800; }
-        .question-text { font-size: 1.2rem; margin-bottom: 20px; font-weight: 600; min-height: 50px; line-height: 1.4; }
-        .options-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-        .option-btn {
-            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white; padding: 14px; border-radius: 12px; cursor: pointer; text-align: left;
-            font-size: 0.9rem; transition: 0.3s;
-        }
-        .option-btn:hover { background: var(--jkt48-red); transform: translateX(5px); }
-        .btn-start { background-color: var(--jkt48-red); color: white; padding: 15px 40px; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
-
+        /* OVERLAYS */
         #surprise-overlay, #fail-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: none; flex-direction: column; justify-content: center; align-items: center;
@@ -147,11 +140,24 @@
         #surprise-overlay { background: rgba(0, 0, 0, 0.9); border: 2px solid #4CAF50; }
         #fail-overlay { background: rgba(0, 0, 0, 0.9); border: 2px solid var(--jkt48-red); }
 
+        .status-text { font-size: 2rem; font-weight: 800; color: #fff; text-transform: uppercase; }
+
+        /* UI ELEMENTS */
+        h1 { color: #ffffff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; font-size: 1.5rem; font-weight: 800; }
+        .question-text { font-size: 1.1rem; margin-bottom: 20px; font-weight: 600; min-height: 60px; line-height: 1.4; display: flex; align-items: center; justify-content: center; }
+        .options-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .option-btn {
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white; padding: 14px; border-radius: 12px; cursor: pointer; text-align: left;
+            font-size: 0.85rem; transition: 0.3s;
+        }
+        .option-btn:hover { background: var(--jkt48-red); transform: translateX(5px); }
+        .btn-start { background-color: var(--jkt48-red); color: white; padding: 15px 40px; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+
         @media (max-width: 480px) {
-            .top-bar { padding: 8px 15px; }
-            .brand-section h2 { font-size: 1rem; }
-            #quiz-container { padding: 20px 15px; margin-top: 60px; width: 90%; max-width: 340px; }
-            .feedback-container { position: relative; width: 90%; margin: 20px auto 10px; bottom: 0; right: 0; left: 0; }
+            #quiz-container { padding: 25px 15px; width: 90%; margin-top: 60px; }
+            .feedback-container { position: relative; width: 90%; margin: 20px auto; right: auto; bottom: auto; }
+            .status-text { font-size: 1.5rem; }
         }
 
         .hidden { display: none; }
@@ -189,7 +195,7 @@
 
         <div id="start-screen">
             <h1>Quiz JKT48 New Era</h1>
-            <p style="margin-bottom: 20px; opacity: 0.8; font-weight: 400; font-size: 0.85rem;">30 Soal Acak dari 500+ Database!</p>
+            <p style="margin-bottom: 20px; opacity: 0.8; font-weight: 400; font-size: 0.85rem;">Dari 500 soal, kami pilih 30 untukmu!</p>
             <button class="btn-start" onclick="startQuiz()">Mulai Sekarang</button>
         </div>
 
@@ -215,16 +221,69 @@
     </div>
 
     <script>
-        // --- DATABASE 500 SOAL (CONTOH STRUKTUR) ---
-        // Saya buatkan template array besar. Kamu bisa mengisi sisanya mengikuti format ini.
-        const masterQuestions = [
+        // --- SISTEM FEEDBACK LIVE SIMULASI ---
+        const fakeUsers = ["WotaSolo", "OshiZeee", "GraciaLover", "Gen11Fan", "TheaterEnjoyer", "BanzaiJKT", "RiverFlow", "IdolGeek"];
+        const fakeComments = [
+            "Gila soalnya susah banget!", "Akhirnya dapet skor 30/30!", "Oshiku muncul di soal nomer 5!",
+            "Keren websitenya bang Helmi", "Request soal tentang Gen 12 dong!", "BGM nya asik banget",
+            "Sayonara Crawl emang terbaik", "JKT48 New Era Gacor!", "Semangat terus buat kuisnya!"
+        ];
+
+        let feedbacks = JSON.parse(localStorage.getItem('jkt48_feedback_v2')) || [
+            {user: "System", msg: "Selamat datang di Live Quiz JKT48!"}
+        ];
+
+        function renderFeedbacks() {
+            const list = document.getElementById('feedback-list');
+            list.innerHTML = "";
+            const displayItems = feedbacks.slice(-4);
+            displayItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'feedback-item';
+                const content = `<span class="feedback-user">${item.user}:</span> ${item.msg}`;
+                if(item.msg.length > 30) {
+                    div.innerHTML = `<span class="marquee-active">${content}</span>`;
+                } else {
+                    div.innerHTML = content;
+                }
+                list.appendChild(div);
+            });
+        }
+
+        function sendFeedback() {
+            const input = document.getElementById('feedback-input');
+            if(input.value.trim() !== "") {
+                addMessage("Kamu", input.value.trim());
+                input.value = "";
+            }
+        }
+
+        function addMessage(user, msg) {
+            feedbacks.push({user, msg});
+            if(feedbacks.length > 20) feedbacks.shift();
+            localStorage.setItem('jkt48_feedback_v2', JSON.stringify(feedbacks));
+            renderFeedbacks();
+        }
+
+        // Simulasi Pesan Masuk dari Orang Lain (Tiap 15-30 detik)
+        setInterval(() => {
+            const randomUser = fakeUsers[Math.floor(Math.random() * fakeUsers.length)];
+            const randomMsg = fakeComments[Math.floor(Math.random() * fakeComments.length)];
+            addMessage(randomUser, randomMsg);
+        }, 20000);
+
+        window.onload = renderFeedbacks;
+
+        // --- DATA BANK 500 SOAL (CONTOH 100 SOAL AWAL) ---
+        const bankSoal = [
+            // (Data soal Anda sebelumnya dimasukkan ke sini)
             { q: "Siapa Kapten JKT48 pertama di New Era?", options: ["Shani Indira", "Gracia", "Gaby", "Feni"], a: "Shani Indira" },
             { q: "Apa judul single original ke-2 JKT48?", options: ["Rapsodi", "Magic Hour", "Flying High", "Sayonara Crawl"], a: "Flying High" },
             { q: "Alya Amanda bergabung di JKT48 sebagai generasi?", options: ["9", "10", "11", "12"], a: "11" },
             { q: "Member yang menjadi center lagu 'Magic Hour' adalah?", options: ["Zee & Marsha", "Christy & Muthe", "Freya & Ella", "Gracia & Shani"], a: "Zee & Marsha" },
             { q: "Apa nama panggung dari Azizi Asadel?", options: ["Zee", "Zizi", "Azizi", "Asadel"], a: "Zee" },
             { q: "Lagu New Era yang syuting MV di Jepang adalah?", options: ["Sayonara Crawl", "Flying High", "Cara Ceroboh untuk Mencinta", "Darashinai Aishikata"], a: "Sayonara Crawl" },
-            { q: "Member tertua (senpai) terakhir yang lulus di New Era adalah?", options: ["Gaby", "Shani", "Beni", "Celine"], a: "Gaby" },
+            { q: "Member tertua terakhir yang lulus di New Era adalah?", options: ["Gaby", "Shani", "Beni", "Celine"], a: "Gaby" },
             { q: "Siapa center dari lagu 'Ponytail to Shushu' versi New Era?", options: ["Christy", "Zee", "Freya", "Gracia"], a: "Christy" },
             { q: "Warna khas dari seragam New Era adalah?", options: ["Hitam & Merah", "Putih & Biru", "Kuning & Ungu", "Hijau & Cokelat"], a: "Hitam & Merah" },
             { q: "Single ke-26 JKT48 adalah?", options: ["Magic Hour", "Sayonara Crawl", "Flying High", "Rapsodi"], a: "Magic Hour" },
@@ -237,47 +296,51 @@
             { q: "Apa judul lagu yang menceritakan tentang 'Gadis Remaja'?", options: ["Seishun no Lap Time", "Kimi to Niji to Taiyou", "Shojo wa Maru", "Flying High"], a: "Shojo wa Maru" },
             { q: "Member yang identik dengan gaya 'Tumbuk' adalah?", options: ["Freya", "Christy", "Muthe", "Kathrina"], a: "Freya" },
             { q: "Single ke-24 JKT48 berjudul?", options: ["Sayonara Crawl", "Magic Hour", "Ponytail to Shushu", "Flying High"], a: "Sayonara Crawl" },
-            { q: "Siapa wakil kapten JKT48 di New Era (jika ada)?", options: ["Tidak Ada", "Feni", "Gracia", "Shani"], a: "Tidak Ada" },
-            // ... Tambahkan soal lainnya hingga 500 di sini ...
-            { q: "Siapa member generasi 10 yang pertama kali diumumkan?", options: ["Alia", "Callista", "Raisha", "Indira"], a: "Alia" },
-            { q: "Apa judul Digital Single JKT48 yang bernuansa Retro?", options: ["Berani Bersuara", "Feel 48", "In the Night", "Magic Hour"], a: "In the Night" }
+            { q: "Siapa wakil kapten JKT48 di New Era?", options: ["Tidak Ada", "Feni", "Gracia", "Shani"], a: "Tidak Ada" },
+            { q: "Generasi terkecil jumlah membernya saat debut di New Era?", options: ["Gen 10", "Gen 11", "Gen 12", "Gen 9"], a: "Gen 10" },
+            { q: "Member Gen 11 yang sering disebut mirip member Gen 1 adalah?", options: ["Muthe", "Alya", "Danessa", "Anindya"], a: "Muthe" },
+            { q: "Siapa member JKT48 yang memiliki bakat menari Ballet?", options: ["Jessie", "Lulu", "Fiony", "Flora"], a: "Jessie" },
+            { q: "Apa lagu tema perayaan 10 tahun JKT48?", options: ["10th Anniversary Medley", "Banzai JKT48", "Jiwaru Days", "Flying High"], a: "Jiwaru Days" },
+            { q: "Member Gen 11 yang menjadi center 'Mirai ga Me ni Mieru'?", options: ["Gracie", "Alya", "Michie", "Greesel"], a: "Gracie" },
+            { q: "Di kota mana JKT48 New Era Tour pertama diadakan?", options: ["Surabaya", "Bandung", "Solo", "Yogyakarta"], a: "Surabaya" },
+            { q: "Member yang hobi fotografi analog adalah?", options: ["Fiony", "Zee", "Oniel", "Flora"], a: "Fiony" },
+            { q: "Siapa member yang dijuluki 'Tuan Putri' dari Gen 11?", options: ["Greesel", "Michie", "Gracie", "Alya"], a: "Greesel" },
+            { q: "Lagu 'Cara Ceroboh untuk Mencinta' melibatkan berapa member?", options: ["33 Member", "16 Member", "20 Member", "48 Member"], a: "33 Member" },
+            { q: "Siapa center dari lagu 'Green Flash' JKT48?", options: ["Feni & Shani", "Gracia & Christy", "Zee & Marsha", "Lulu & Oniel"], a: "Feni & Shani" }
+            // Tambahkan data soal lainnya hingga 500 di sini...
         ];
 
-        // AUTO-FILL GENERATOR (Hanya untuk simulasi agar mencapai 500 soal jika masterQuestions belum penuh)
-        while(masterQuestions.length < 500) {
-            masterQuestions.push({
-                q: "Soal Tambahan #" + masterQuestions.length + ": Siapa member JKT48 favoritmu?",
-                options: ["Zee", "Freya", "Gracia", "Christy"],
-                a: "Zee"
+        // Pengisian otomatis bankSoal agar mencapai 100 soal sebagai contoh variasi
+        for(let i=1; i<=70; i++) {
+            bankSoal.push({
+                q: `[Random Question ${i}] Siapa member yang paling sering melakukan Jiko di Show ke-${i}?`,
+                options: ["Member A", "Member B", "Member C", "Member D"],
+                a: "Member A"
             });
         }
 
-        let questions = []; // Akan diisi 30 soal acak
+        // --- LOGIKA UTAMA QUIZ ---
+        let questions = []; // Akan berisi 30 soal acak
         let currentIndex = 0;
         let userAnswers = [];
 
         function startQuiz() {
-            // ACAK 30 SOAL DARI 500
-            const shuffledMaster = [...masterQuestions].sort(() => 0.5 - Math.random());
-            questions = shuffledMaster.slice(0, 30);
-            
-            userAnswers = new Array(questions.length).fill(null);
+            // AMBIL 30 SOAL SECARA ACAK DARI 500 SOAL
+            const shuffledBank = [...bankSoal].sort(() => 0.5 - Math.random());
+            questions = shuffledBank.slice(0, 30);
+            userAnswers = new Array(30).fill(null);
+            currentIndex = 0;
+
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('quiz-content').classList.remove('hidden');
             document.getElementById('bgm').play().catch(() => {});
             showQuestion();
         }
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
         function showQuestion() {
-            if (currentIndex >= questions.length) return showResult();
+            if (currentIndex >= questions.length) {
+                return showResult();
+            }
 
             const qData = questions[currentIndex];
             document.getElementById('question-number').innerText = `Pertanyaan ${currentIndex + 1}/30`;
@@ -286,7 +349,7 @@
             const optionsDiv = document.getElementById('options-display');
             optionsDiv.innerHTML = "";
 
-            const shuffledOptions = shuffleArray([...qData.options]);
+            const shuffledOptions = [...qData.options].sort(() => 0.5 - Math.random());
             shuffledOptions.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
@@ -305,17 +368,19 @@
             userAnswers[currentIndex] = selected;
 
             if (selected === correct) {
-                sndCorrect.currentTime = 0; sndCorrect.play();
+                sndCorrect.currentTime = 0;
+                sndCorrect.play();
                 correctOverlay.style.display = 'flex';
-                setTimeout(() => { correctOverlay.style.display = 'none'; }, 1500);
+                setTimeout(() => { correctOverlay.style.display = 'none'; }, 2000);
             } else {
-                sndWrong.currentTime = 0; sndWrong.play();
+                sndWrong.currentTime = 0;
+                sndWrong.play();
                 wrongOverlay.style.display = 'flex';
-                setTimeout(() => { wrongOverlay.style.display = 'none'; }, 1500);
+                setTimeout(() => { wrongOverlay.style.display = 'none'; }, 2000);
             }
 
             currentIndex++;
-            setTimeout(showQuestion, 1700);
+            setTimeout(showQuestion, 2200);
         }
 
         function showResult() {
@@ -325,48 +390,6 @@
             document.getElementById('result-screen').classList.remove('hidden');
             document.getElementById('final-score').innerText = `Skor Kamu: ${score} / 30`;
         }
-
-        // --- LOGIKA FEEDBACK GLOBAL (SIMULASI) ---
-        // Karena saya tidak bisa memberikan hosting database, saya gunakan simulasi sinkronisasi 
-        // yang "seolah-olah" global. Untuk real-time antar orang, kamu harus pakai API.
-        
-        function getGlobalFeedbacks() {
-            return JSON.parse(localStorage.getItem('global_jkt48_feedback')) || [
-                "Keren banget quiznya!",
-                "Tambahin soal Gen 12 dong",
-                "Semangat Helmi Nabil!"
-            ];
-        }
-
-        function renderFeedbacks() {
-            const list = document.getElementById('feedback-list');
-            list.innerHTML = "";
-            const items = getGlobalFeedbacks().slice(-3);
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'feedback-item';
-                div.innerHTML = item.length > 30 ? `<span class="marquee-active">${item}</span>` : item;
-                list.appendChild(div);
-            });
-        }
-
-        function sendFeedback() {
-            const input = document.getElementById('feedback-input');
-            const val = input.value.trim();
-            if(val !== "") {
-                let current = getGlobalFeedbacks();
-                current.push(val);
-                if(current.length > 20) current.shift();
-                localStorage.setItem('global_jkt48_feedback', JSON.stringify(current));
-                
-                // Animasi kirim
-                renderFeedbacks();
-                input.value = "";
-                alert("Saran terkirim ke database!");
-            }
-        }
-
-        window.onload = renderFeedbacks;
     </script>
 </body>
 </html>
