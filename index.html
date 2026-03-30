@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JKT48 New Era Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --jkt48-red: #bb0811;
+            --jkt48-dark: #8b060d;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --taskbar-bg: rgba(0, 0, 0, 0.4); 
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('jkt48 new era wallpapers.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--taskbar-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 15px 30px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .brand-section h2 { 
+            margin: 0; font-weight: 800; letter-spacing: 1.5px; font-size: 1.5rem;
+            color: #fff; text-transform: uppercase;
+        }
+        .brand-section p { margin: 2px 0 0; font-weight: 400; font-size: 0.9rem; color: #ffeb3b; }
+
+        .social-icons { display: flex; gap: 20px; }
+        .social-icons a { color: white; font-size: 1.3rem; transition: 0.3s; opacity: 0.8; }
+
+        /* BOX QUIZ */
+        #quiz-container {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* FEEDBACK SYSTEM */
+        .feedback-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 280px;
+            z-index: 999;
+        }
+
+        #feedback-list {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            font-size: 0.75rem;
+            border: 1px solid var(--glass-border);
+            height: 100px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 5px;
+        }
+
+        .feedback-item {
+            padding: 5px 8px;
+            border-left: 2px solid var(--jkt48-red);
+            background: rgba(255,255,255,0.05);
+            animation: slideUp 0.3s ease-out;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Marquee hanya aktif via JS jika teks panjang */
+        .marquee-active {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 10s linear infinite;
+        }
+
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .feedback-input-group { display: flex; gap: 5px; }
+        .feedback-input-group input {
+            flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.1); color: white; font-size: 0.8rem; outline: none;
+        }
+        .feedback-input-group button {
+            background: var(--jkt48-red); border: none; color: white; width: 40px; height: 40px;
+            border-radius: 50%; cursor: pointer; transition: 0.3s;
+        }
+
+        /* UI ELEMENTS */
+        .status-text { font-size: 2rem; font-weight: 800; color: #fff; animation: glow 1.5s infinite alternate; }
+        h1 { color: #ffffff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; font-size: 1.5rem; font-weight: 800; }
+        .question-text { font-size: 1.2rem; margin-bottom: 20px; font-weight: 600; min-height: 50px; line-height: 1.4; }
+        .options-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .option-btn {
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white; padding: 14px; border-radius: 12px; cursor: pointer; text-align: left;
+            font-size: 0.9rem; transition: 0.3s;
+        }
+        .option-btn:hover { background: var(--jkt48-red); transform: translateX(5px); }
+        .btn-start { background-color: var(--jkt48-red); color: white; padding: 15px 40px; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+
+        #surprise-overlay, #fail-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            border-radius: 20px; z-index: 100;
+        }
+        #surprise-overlay { background: rgba(0, 0, 0, 0.9); border: 2px solid #4CAF50; }
+        #fail-overlay { background: rgba(0, 0, 0, 0.9); border: 2px solid var(--jkt48-red); }
+
+        /* ----- MOBILE ADAPTATION ----- */
+        @media (max-width: 480px) {
+            .top-bar { padding: 8px 15px; }
+            .brand-section h2 { font-size: 1rem; }
+            .brand-section p { font-size: 0.65rem; }
+            .social-icons { gap: 10px; }
+            .social-icons a { font-size: 1rem; }
+
+            #quiz-container { 
+                padding: 20px 15px; 
+                margin-top: 60px; 
+                width: 90%;
+                max-width: 340px; 
+            }
+
+            h1 { font-size: 1.2rem; }
+            .question-text { font-size: 1rem; margin-bottom: 15px; }
+            .option-btn { padding: 10px 12px; font-size: 0.8rem; }
+
+            .feedback-container { 
+                position: relative; 
+                width: 90%;
+                margin: 20px auto 10px;
+                bottom: 0;
+                right: 0;
+                left: 0;
+            }
+            #feedback-list { height: 70px; }
+            .feedback-input-group input { padding: 8px 12px; font-size: 0.75rem; }
+            .feedback-input-group button { width: 35px; height: 35px; }
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <audio id="bgm" loop><source src="flying_high.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-correct"><source src="correct.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-wrong"><source src="wrong.mp3" type="audio/mpeg"></audio>
+
+    <div class="top-bar">
+        <div class="brand-section">
+            <h2>JKT48 NEW ERA</h2>
+            <p>By Helmi Nabil</p>
+        </div>
+        <div class="social-icons">
+            <a href="https://x.com/stranger6001" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/helminabil_?igsh=MWQ3N2xobm54Z204YQ==" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.youtube.com/@helminabil" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://helminabilh.github.io/Profile/" target="_blank"><i class="fas fa-globe"></i></a>
+        </div>
+    </div>
+
+    <div id="quiz-container">
+        <div id="surprise-overlay">
+            <div class="status-text" style="text-shadow: 0 0 20px #4CAF50;">MANTAP!🌟</div>
+            <div style="font-size: 1rem; margin-top: 15px; color: #ffeb3b; font-weight: 600;">Pasti Oshimu Bangga!</div>
+        </div>
+
+        <div id="fail-overlay">
+            <div class="status-text" style="text-shadow: 0 0 20px var(--jkt48-red);">SALAH!❌</div>
+            <div style="font-size: 1rem; margin-top: 15px; color: #fff; font-weight: 600;">Gimana sih? katanya wota</div>
+        </div>
+
+        <div id="start-screen">
+            <h1>Quiz JKT48 New Era</h1>
+            <p style="margin-bottom: 20px; opacity: 0.8; font-weight: 400; font-size: 0.85rem;">Saya bertanya anda menjawab, 30 soal ya!</p>
+            <button class="btn-start" onclick="startQuiz()">Mulai Sekarang</button>
+        </div>
+
+        <div id="quiz-content" class="hidden">
+            <div id="question-number" style="font-size: 0.8rem; opacity: 0.7;">Pertanyaan 1/30</div>
+            <div class="question-text" id="question-display">Loading...</div>
+            <div class="options-container" id="options-display"></div>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <h2>MISSION COMPLETE</h2>
+            <p id="final-score" style="font-size: 1.1rem; margin: 20px 0; font-weight: 600;"></p>
+            <button class="btn-start" onclick="location.reload()">Main Lagi</button>
+        </div>
+    </div>
+
+    <div class="feedback-container">
+        <div id="feedback-list"></div>
+        <div class="feedback-input-group">
+            <input type="text" id="feedback-input" placeholder="Kritik & Saran...">
+            <button onclick="sendFeedback()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // LOGIKA FEEDBACK
+        let feedbacks = JSON.parse(localStorage.getItem('jkt48_feedback')) || [];
+
+        function renderFeedbacks() {
+            const list = document.getElementById('feedback-list');
+            list.innerHTML = "";
+            const displayItems = feedbacks.slice(-3);
+            displayItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'feedback-item';
+                if(item.length > 35) {
+                    div.innerHTML = `<span class="marquee-active">${item}</span>`;
+                } else {
+                    div.innerText = item;
+                }
+                list.appendChild(div);
+            });
+        }
+
+        function sendFeedback() {
+            const input = document.getElementById('feedback-input');
+            const val = input.value.trim();
+            if(val !== "") {
+                feedbacks.push(val);
+                if(feedbacks.length > 10) feedbacks.shift(); 
+                localStorage.setItem('jkt48_feedback', JSON.stringify(feedbacks));
+                renderFeedbacks();
+                input.value = "";
+            }
+        }
+
+        window.onload = renderFeedbacks;
+
+        // SCRIPT ASLI QUIZ (TIDAK DIUBAH)
+        const questions = [
+            { q: "Siapa Kapten JKT48 pertama di New Era?", options: ["Shani Indira", "Gracia", "Gaby", "Feni"], a: "Shani Indira" },
+            { q: "Apa judul single original ke-2 JKT48?", options: ["Rapsodi", "Magic Hour", "Flying High", "Sayonara Crawl"], a: "Flying High" },
+            { q: "Alya Amanda bergabung di JKT48 sebagai generasi?", options: ["9", "10", "11", "12"], a: "11" },
+            { q: "Member yang menjadi center lagu 'Magic Hour' adalah?", options: ["Zee & Marsha", "Christy & Muthe", "Freya & Ella", "Gracia & Shani"], a: "Zee & Marsha" },
+            { q: "Apa nama panggung dari Azizi Asadel?", options: ["Zee", "Zizi", "Azizi", "Asadel"], a: "Zee" },
+            { q: "Lagu New Era yang syuting MV di Jepang adalah?", options: ["Sayonara Crawl", "Flying High", "Cara Ceroboh untuk Mencinta", "Darashinai Aishikata"], a: "Sayonara Crawl" },
+            { q: "Member tertua (senpai) terakhir yang lulus di New Era adalah?", options: ["Gaby", "Shani", "Beni", "Celine"], a: "Gaby" },
+            { q: "Siapa center dari lagu 'Ponytail to Shushu' versi New Era?", options: ["Christy", "Zee", "Freya", "Gracia"], a: "Christy" },
+            { q: "Warna khas dari seragam New Era adalah?", options: ["Hitam & Merah", "Putih & Biru", "Kuning & Ungu", "Hijau & Cokelat"], a: "Hitam & Merah" },
+            { q: "Single ke-26 JKT48 adalah?", options: ["Magic Hour", "Sayonara Crawl", "Flying High", "Rapsodi"], a: "Magic Hour" },
+            { q: "Siapa General Manager JKT48 saat ini?", options: ["Melody Laksani", "Kinal Putri", "Shani Indira", "Gaby Warouw"], a: "Melody Laksani" },
+            { q: "Setlist pertama yang dibawakan di New Era adalah?", options: ["Renai禁止Jourei", "Cara Ceroboh untuk Mencinta", "Banzai JKT48", "Ramune no Nomikata"], a: "Banzai JKT48" },
+            { q: "Siapa member yang terkenal dengan jargon 'Mamam tuh'?", options: ["Ella", "Freya", "Zee", "Marsha"], a: "Ella" },
+            { q: "Lagu 'Flying High' diproduseri oleh produser asal?", options: ["Jepang", "Amerika Serikat", "Korea Selatan", "Indonesia"], a: "Amerika Serikat" },
+            { q: "Siapa member JKT48 yang hobi bermain gitar elektrik?", options: ["Zee", "Gracia", "Fiony", "Oniel"], a: "Zee" },
+            { q: "Theater JKT48 berlokasi di mall?", options: ["Grand Indonesia", "FX Sudirman", "Senayan City", "Plaza Indonesia"], a: "FX Sudirman" },
+            { q: "Apa judul lagu yang menceritakan tentang 'Gadis Remaja'?", options: ["Seishun no Lap Time", "Kimi to Niji to Taiyou", "Shojo wa Maru", "Flying High"], a: "Shojo wa Maru" },
+            { q: "Member yang identik dengan gaya 'Tumbuk' adalah?", options: ["Freya", "Christy", "Muthe", "Kathrina"], a: "Freya" },
+            { q: "Single ke-24 JKT48 berjudul?", options: ["Sayonara Crawl", "Magic Hour", "Ponytail to Shushu", "Flying High"], a: "Sayonara Crawl" },
+            { q: "Siapa wakil kapten JKT48 di New Era (jika ada)?", options: ["Tidak Ada", "Feni", "Gracia", "Shani"], a: "Tidak Ada" },
+            { q: "Generasi terkecil jumlah membernya saat debut di New Era?", options: ["Gen 10", "Gen 11", "Gen 12", "Gen 9"], a: "Gen 10" },
+            { q: "Member Gen 11 yang sering disebut mirip member Gen 1 adalah?", options: ["Muthe", "Alya", "Danessa", "Anindya"], a: "Muthe" },
+            { q: "Siapa member JKT48 yang memiliki bakat menari Ballet?", options: ["Jessie", "Lulu", "Fiony", "Flora"], a: "Jessie" },
+            { q: "Apa lagu tema perayaan 10 tahun JKT48?", options: ["10th Anniversary Medley", "Banzai JKT48", "Jiwaru Days", "Flying High"], a: "Jiwaru Days" },
+            { q: "Member Gen 11 yang menjadi center 'Mirai ga Me ni Mieru'?", options: ["Gracie", "Alya", "Michie", "Greesel"], a: "Gracie" },
+            { q: "Di kota mana JKT48 New Era Tour pertama diadakan?", options: ["Surabaya", "Bandung", "Solo", "Yogyakarta"], a: "Surabaya" },
+            { q: "Member yang hobi fotografi analog adalah?", options: ["Fiony", "Zee", "Oniel", "Flora"], a: "Fiony" },
+            { q: "Siapa member yang dijuluki 'Tuan Putri' dari Gen 11?", options: ["Greesel", "Michie", "Gracie", "Alya"], a: "Greesel" },
+            { q: "Lagu 'Cara Ceroboh untuk Mencinta' melibatkan berapa member?", options: ["33 Member", "16 Member", "20 Member", "48 Member"], a: "33 Member" },
+            { q: "Siapa center dari lagu 'Green Flash' JKT48?", options: ["Feni & Shani", "Gracia & Christy", "Zee & Marsha", "Lulu & Oniel"], a: "Feni & Shani" }
+        ];
+
+        let currentIndex = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+
+        function startQuiz() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-content').classList.remove('hidden');
+            document.getElementById('bgm').play().catch(() => {});
+            showQuestion();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function showQuestion() {
+            if (currentIndex >= questions.length) {
+                return showResult();
+            }
+
+            const qData = questions[currentIndex];
+            document.getElementById('question-number').innerText = `Pertanyaan ${currentIndex + 1}/30`;
+            document.getElementById('question-display').innerText = qData.q;
+            
+            const optionsDiv = document.getElementById('options-display');
+            optionsDiv.innerHTML = "";
+
+            const shuffledOptions = shuffleArray([...qData.options]);
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt, qData.a);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const correctOverlay = document.getElementById('surprise-overlay');
+            const wrongOverlay = document.getElementById('fail-overlay');
+            const sndCorrect = document.getElementById('snd-correct');
+            const sndWrong = document.getElementById('snd-wrong');
+
+            userAnswers[currentIndex] = selected;
+
+            // DURASI OVERLAY DISESUAIKAN (LEBIH LAMA)
+            if (selected === correct) {
+                sndCorrect.currentTime = 0;
+                sndCorrect.play();
+                correctOverlay.style.display = 'flex';
+                setTimeout(() => { correctOverlay.style.display = 'none'; }, 2000); // 2 detik agar terbaca
+            } else {
+                sndWrong.currentTime = 0;
+                sndWrong.play();
+                wrongOverlay.style.display = 'flex';
+                setTimeout(() => { wrongOverlay.style.display = 'none'; }, 2000); // 2 detik agar terbaca
+            }
+
+            currentIndex++;
+            const waitTime = 2200; // Tunggu sedikit lebih lama sebelum pertanyaan selanjutnya
+            setTimeout(showQuestion, waitTime);
+        }
+
+        function showResult() {
+            let score = 0;
+            userAnswers.forEach((ans, index) => { if(ans === questions[index].a) score++; });
+            document.getElementById('quiz-content').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            document.getElementById('final-score').innerText = `Skor Kamu: ${score} / 30`;
+        }
+    </script>
+</body>
+</html>
