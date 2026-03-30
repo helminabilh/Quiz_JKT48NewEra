@@ -148,7 +148,7 @@
 
     <div class="top-bar">
         <div class="brand-section">
-            <h2>JKT48 NEW ERA</h2>
+            <h2>JKT48 NEW ERA QUIZ</h2>
             <p>By Helmi Nabil</p>
         </div>
         <div class="social-icons">
@@ -232,7 +232,7 @@
             const randomMsg = rawChats[Math.floor(Math.random() * rawChats.length)];
             const chatDiv = document.createElement('div');
             chatDiv.className = 'chat-item';
-            chatDiv.innerHTML = `<span class="chat-user">Unknown:</span><span class="chat-msg">${randomMsg}</span>`;
+            chatDiv.innerHTML = `<span class="chat-user">Developer:</span><span class="chat-msg">${randomMsg}</span>`;
             chatList.appendChild(chatDiv);
             if (chatList.childNodes.length > 5) chatList.removeChild(chatList.firstChild);
         }
